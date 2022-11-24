@@ -12,9 +12,10 @@ class MyApp extends StatelessWidget {
     return  MaterialApp(
       debugShowCheckedModeBanner: false,
       title: 'Material App',
-      initialRoute: 'home',
+      initialRoute: 'status',
       routes: {
-        'home': (_) => const HomeScreen()
+        'home': (_) => const HomeScreen(),
+        'status': (_)=> const StatusScreen()
       },
     );
   }
