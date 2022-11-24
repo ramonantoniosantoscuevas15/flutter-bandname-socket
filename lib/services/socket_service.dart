@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:socket_io_client/socket_io_client.dart' as IO;
+import 'package:socket_io_client/socket_io_client.dart';
 enum ServerStatus{
   Online,
   Offline,
@@ -14,9 +14,9 @@ class SocketService with ChangeNotifier {
   }
  
   void _initConfig(){  
-    IO.Socket socket = IO.io(
+    Socket socket = io(
       "http://10.0.2.2:3000",
-      IO.OptionBuilder()
+      OptionBuilder()
         .setTransports(['websocket'])
         .enableAutoConnect() 
         .build()
