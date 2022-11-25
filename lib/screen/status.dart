@@ -8,10 +8,16 @@ class StatusScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final socketservice = Provider.of<SocketService>(context);
-    return const Scaffold(
+    return  Scaffold(
       body: Center(
-        child: Text('StatusScreen'),
-      ),
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            Text('ServerStatus:${socketservice.serverStatus}')
+          ],
+      
+        ),
+      )
     );
   }
 }
