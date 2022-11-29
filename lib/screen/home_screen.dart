@@ -1,6 +1,7 @@
 import 'package:bandas/models/models.dart';
 
 import 'package:flutter/material.dart';
+import 'package:pie_chart/pie_chart.dart';
 import 'package:provider/provider.dart';
 
 import '../services/socket_service.dart';
@@ -65,9 +66,17 @@ class _HomeScreenState extends State<HomeScreen> {
           )
         ],
       ),
-      body: ListView.builder(
-          itemCount: bands.length,
-          itemBuilder: (context, i) => _bandTile(bands[i])),
+      body: Column(
+        children: [
+          if(bands.isNotEmpty)
+          _showGraph(),
+          Expanded(
+            child: ListView.builder(
+                itemCount: bands.length,
+                itemBuilder: (context, i) => _bandTile(bands[i])),
+          )
+        ],
+      ),
       floatingActionButton: FloatingActionButton(
         elevation: 1,
         onPressed: () => addNewBand(),
@@ -106,8 +115,7 @@ class _HomeScreenState extends State<HomeScreen> {
           '${band.votes}',
           style: const TextStyle(fontSize: 20),
         ),
-        onTap: ()=>socketservice.socket.emit('vote-band', {'id': band.id}),
-        
+        onTap: () => socketservice.socket.emit('vote-band', {'id': band.id}),
       ),
     );
   }
@@ -142,5 +150,21 @@ class _HomeScreenState extends State<HomeScreen> {
     }
 
     Navigator.pop(context);
+  }
+
+  //mostrar grafica
+  _showGraph() {
+    Map<String, double> dataMap = {};
+    bands.forEach((band) {
+      dataMap.putIfAbsent(band.name?? '', () => band.votes!.toDouble());
+    });
+
+    return Container(
+        width: double.infinity, height: 200, child: PieChart(dataMap: dataMap)
+        
+        
+        
+        
+        );
   }
 }
