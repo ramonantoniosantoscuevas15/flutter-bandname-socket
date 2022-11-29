@@ -14,11 +14,30 @@ class HomeScreen extends StatefulWidget {
 
 class _HomeScreenState extends State<HomeScreen> {
   List<Band> bands = [
-    Band(id: '1', name: 'Metalica', votes: 5),
-    Band(id: '2', name: 'Linkin Park', votes: 7),
-    Band(id: '3', name: 'ACDC', votes: 8),
-    Band(id: '4', name: 'Queen', votes: 4),
+    //Band(id: '1', name: 'Metalica', votes: 5),
+    //Band(id: '2', name: 'Linkin Park', votes: 7),
+    //Band(id: '3', name: 'ACDC', votes: 8),
+    //Band(id: '4', name: 'Queen', votes: 4),
   ];
+  @override
+  void initState() {
+    final socketservice = Provider.of<SocketService>(context, listen: false);
+    socketservice.socket.on('active-bands', (payload) {
+      bands = (payload as List).map((band) => Band.fromMap(band)).toList();
+      setState(() {
+        
+      });
+    });
+    super.initState();
+  }
+
+  @override
+  void dispose() {
+    final socketservice = Provider.of<SocketService>(context, listen: false);
+    socketservice.socket.off('active-bands');
+    super.dispose();
+  }
+
   @override
   Widget build(BuildContext context) {
     final socketservice = Provider.of<SocketService>(context);
@@ -34,11 +53,15 @@ class _HomeScreenState extends State<HomeScreen> {
         actions: [
           Container(
             margin: const EdgeInsets.only(right: 10),
-            child: (socketservice.serverStatus== ServiceStatus.Online)
-            ?
-             Icon(Icons.check_circle, color: Colors.blue[300],)
-             :
-             const Icon(Icons.offline_bolt, color: Colors.red,),
+            child: (socketservice.serverStatus == ServiceStatus.Online)
+                ? Icon(
+                    Icons.check_circle,
+                    color: Colors.blue[300],
+                  )
+                : const Icon(
+                    Icons.offline_bolt,
+                    color: Colors.red,
+                  ),
           )
         ],
       ),
