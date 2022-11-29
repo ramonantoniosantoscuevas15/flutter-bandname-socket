@@ -80,8 +80,9 @@ class _HomeScreenState extends State<HomeScreen> {
       key: Key(band.id ?? ''),
       direction: DismissDirection.startToEnd,
       onDismissed: (direction) {
-        print('direction: $direction');
-        print('id: ${band.id}');
+        
+        //print('id: ${band.id}');
+        socketservice.emit('delete-band',{'id': band.id});
       },
       background: Container(
         padding: const EdgeInsets.only(left: 8.0),
@@ -134,13 +135,10 @@ class _HomeScreenState extends State<HomeScreen> {
   }
 
   void addBandTolist(String name) {
-    print(name);
-
     if (name.length > 1) {
       //podemos agregar
-
-      bands.add(Band(id: DateTime.now().toString(), name: name, votes: 0));
-      setState(() {});
+      final socketservice = Provider.of<SocketService>(context, listen: false);
+      socketservice.socket.emit('add-band',{'name':name});
     }
 
     Navigator.pop(context);
