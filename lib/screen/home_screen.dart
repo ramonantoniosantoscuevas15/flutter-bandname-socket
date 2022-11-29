@@ -22,11 +22,13 @@ class _HomeScreenState extends State<HomeScreen> {
   @override
   void initState() {
     final socketservice = Provider.of<SocketService>(context, listen: false);
-    socketservice.socket.on('active-bands', (payload) {
-      bands = (payload as List).map((band) => Band.fromMap(band)).toList();
-      setState(() {});
-    });
+    socketservice.socket.on('active-bands', _handleActiveBands);
     super.initState();
+  }
+
+  _handleActiveBands(dynamic payload) {
+    bands = (payload as List).map((band) => Band.fromMap(band)).toList();
+    setState(() {});
   }
 
   @override
@@ -80,9 +82,8 @@ class _HomeScreenState extends State<HomeScreen> {
       key: Key(band.id ?? ''),
       direction: DismissDirection.startToEnd,
       onDismissed: (direction) {
-        
         //print('id: ${band.id}');
-        socketservice.emit('delete-band',{'id': band.id});
+        socketservice.emit('delete-band', {'id': band.id});
       },
       background: Container(
         padding: const EdgeInsets.only(left: 8.0),
@@ -105,9 +106,8 @@ class _HomeScreenState extends State<HomeScreen> {
           '${band.votes}',
           style: const TextStyle(fontSize: 20),
         ),
-        onTap: () {
-          socketservice.socket.emit('vote-band', {'id': band.id});
-        },
+        onTap: ()=>socketservice.socket.emit('vote-band', {'id': band.id}),
+        
       ),
     );
   }
@@ -116,7 +116,7 @@ class _HomeScreenState extends State<HomeScreen> {
     final textController = TextEditingController();
     showDialog(
         context: context,
-        builder: (context) {
+        builder: (_) {
           return AlertDialog(
             title: const Text('New Band Name'),
             content: TextField(
@@ -138,7 +138,7 @@ class _HomeScreenState extends State<HomeScreen> {
     if (name.length > 1) {
       //podemos agregar
       final socketservice = Provider.of<SocketService>(context, listen: false);
-      socketservice.socket.emit('add-band',{'name':name});
+      socketservice.socket.emit('add-band', {'name': name});
     }
 
     Navigator.pop(context);
