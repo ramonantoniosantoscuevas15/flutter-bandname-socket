@@ -24,9 +24,7 @@ class _HomeScreenState extends State<HomeScreen> {
     final socketservice = Provider.of<SocketService>(context, listen: false);
     socketservice.socket.on('active-bands', (payload) {
       bands = (payload as List).map((band) => Band.fromMap(band)).toList();
-      setState(() {
-        
-      });
+      setState(() {});
     });
     super.initState();
   }
@@ -77,6 +75,7 @@ class _HomeScreenState extends State<HomeScreen> {
   }
 
   Widget _bandTile(Band band) {
+    final socketservice = Provider.of<SocketService>(context, listen: false);
     return Dismissible(
       key: Key(band.id ?? ''),
       direction: DismissDirection.startToEnd,
@@ -106,7 +105,7 @@ class _HomeScreenState extends State<HomeScreen> {
           style: const TextStyle(fontSize: 20),
         ),
         onTap: () {
-          print(band.name);
+          socketservice.socket.emit('vote-band', {'id': band.id});
         },
       ),
     );
