@@ -155,6 +155,7 @@ class _HomeScreenState extends State<HomeScreen> {
   //mostrar grafica
   _showGraph() {
     Map<String, double> dataMap = {};
+    // ignore: avoid_function_literals_in_foreach_calls
     bands.forEach((band) {
       dataMap.putIfAbsent(band.name?? '', () => band.votes!.toDouble());
     });
